@@ -304,7 +304,7 @@ class NavigationPainter1 extends CustomPainter {
 
     // Starting point (bottom-center)
     Offset currentPosition =
-        Offset(size.width + width / 1.43, size.height + 405);
+        Offset(size.width + width / 1.03, size.height + 405);
     path.moveTo(currentPosition.dx, currentPosition.dy);
 
     double animatedDistance = progress *
