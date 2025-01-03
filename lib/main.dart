@@ -55,6 +55,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   late TransformationController _zoom_controller = TransformationController();
   late Matrix4 _initialZoom;
   final ScrollController _scrollController = ScrollController();
+  bool isZoomedIn = false;
 
   late Rect boundaryRect;
   // Define directions as a list of maps with sizes
@@ -127,7 +128,13 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
+        physics: isZoomedIn
+            ? AlwaysScrollableScrollPhysics()
+            : NeverScrollableScrollPhysics(),
         child: SingleChildScrollView(
+          physics: isZoomedIn
+              ? AlwaysScrollableScrollPhysics()
+              : NeverScrollableScrollPhysics(),
           controller: _scrollController,
           scrollDirection: Axis.horizontal,
           child: Center(
@@ -142,7 +149,13 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
               maxScale: 1.0, // Maximum zoom-in scale
               transformationController: _zoom_controller, // Use the controller
               onInteractionEnd: (details) {
-                // Check if zoom level is beyond the default (1.0)
+                double currentScale =
+                    _zoom_controller.value.getMaxScaleOnAxis();
+
+                setState(() {
+                  // Change the boolean when the scale goes beyond the default value
+                  isZoomedIn = currentScale > 1.0;
+                });
               },
               child: Container(
                 // width: MediaQuery.of(context).size.width,
