@@ -63,11 +63,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels > 800) {
-        _scrollController.jumpTo(800); // Stop scrolling beyond 1000 pixels
-      }
-    });
+
     // Set initial zoom to a smaller scale
     _initialZoom = Matrix4.identity()..scale(0.41); // Adjust scale as needed
     _zoom_controller =
@@ -88,7 +84,12 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   @override
   void dispose() {
     _controller.dispose();
+    togglebool();
     super.dispose();
+  }
+
+  void togglebool() {
+    isZoomedIn = false;
   }
 
   @override
@@ -105,6 +106,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
     //   {"direction": "straight", "length": 120.0},
     //   {"direction": "right", "length": 10.0},
     // ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -151,11 +153,13 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
               onInteractionEnd: (details) {
                 double currentScale =
                     _zoom_controller.value.getMaxScaleOnAxis();
-
-                setState(() {
-                  // Change the boolean when the scale goes beyond the default value
-                  isZoomedIn = currentScale > 1.0;
-                });
+                print(currentScale);
+                if (currentScale == 1.0) {
+                  setState(() {
+                    // Change the boolean when the scale goes beyond the default value
+                    isZoomedIn = true;
+                  });
+                }
               },
               child: Container(
                 // width: MediaQuery.of(context).size.width,

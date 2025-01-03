@@ -29,8 +29,8 @@ class _FirstFloorState extends State<FirstFloor>
   void initState() {
     super.initState();
     // Set initial zoom to a smaller scale
-    _initialZoom = Matrix4.identity()..scale(0.5); // Adjust scale as needed
-    _zoom_controller.value = _initialZoom; // Apply initial zoom
+    // _initialZoom = Matrix4.identity()..scale(0.5); // Adjust scale as needed
+    // _zoom_controller.value = _initialZoom; // Apply initial zoom
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -87,7 +87,7 @@ class _FirstFloorState extends State<FirstFloor>
           scrollDirection: Axis.horizontal,
           child: InteractiveViewer(
             panEnabled: true, // Enable panning
-            boundaryMargin: EdgeInsets.all(10), // Add padding outside
+            boundaryMargin: EdgeInsets.all(5), // Add padding outside
             minScale: 0.2, // Minimum zoom-out scale
             maxScale: 4.0, // Maximum zoom-in scale
             transformationController: _zoom_controller,
