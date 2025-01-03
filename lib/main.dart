@@ -52,9 +52,9 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _progress;
-  final TransformationController _zoom_controller = TransformationController();
-  late final Matrix4 _initialZoom;
-  bool _isZoomed = false;
+  late TransformationController _zoom_controller = TransformationController();
+  late Matrix4 _initialZoom;
+  final ScrollController _scrollController = ScrollController();
 
   late Rect boundaryRect;
   // Define directions as a list of maps with sizes
@@ -62,18 +62,15 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final Size screenSize = MediaQuery.of(context).size;
-    //   final Size contentSize = Size(1200, 600); // Define content size
-    //   final double scale = screenSize.width / contentSize.width;
-
-    //   _zoom_controller.value = Matrix4.identity()
-    //     ..scale(scale)
-    //     ..translate(0.0, 0.0);
-    // });
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels > 800) {
+        _scrollController.jumpTo(800); // Stop scrolling beyond 1000 pixels
+      }
+    });
     // Set initial zoom to a smaller scale
-    _initialZoom = Matrix4.identity()..scale(0.5); // Adjust scale as needed
-    _zoom_controller.value = _initialZoom; // Apply initial zoom
+    _initialZoom = Matrix4.identity()..scale(0.41); // Adjust scale as needed
+    _zoom_controller =
+        TransformationController(_initialZoom); // Apply initial zoom
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -131,727 +128,795 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
       ),
       body: SingleChildScrollView(
         child: SingleChildScrollView(
+          controller: _scrollController,
           scrollDirection: Axis.horizontal,
-          child: InteractiveViewer(
-            panEnabled: _isZoomed, // Enable panning
-            boundaryMargin: EdgeInsets.all(10), // Add padding outside
-            minScale: 0.2, // Minimum zoom-out scale
-            maxScale: 4.0, // Maximum zoom-in scale
-            transformationController: _zoom_controller, // Use the controller
-            onInteractionEnd: (details) {
-              // Check if zoom level is beyond the default (1.0)
-              setState(() {
-                _isZoomed = _zoom_controller.value.getMaxScaleOnAxis() > 1.0;
-              });
-            },
-            child: Container(
-              decoration:
-                  BoxDecoration(border: Border.all(color: Colors.black)),
-              child: Stack(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          sizedBox(0.0, 10.0),
-                          Column(
-                            children: [
-                              Container(
-                                // height: 130,
-                                color: Colors.white,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // sizedBox(0.0, 10.0),
-                                    Column(
-                                      children: [
-                                        sizedBox(10.0, 0.0),
-                                        customeContainer(
-                                            20.0, 60.0, '50A', 1.0),
-                                        sizedBox(20.0, 0.0),
-                                        customeContainer(
-                                            15.0, 60.0, '51A', 1.0),
-                                        customeContainer(
-                                            15.0, 60.0, '52A', 1.0),
-                                        sizedBox(20.0, 0.0),
-                                        customeContainer(
-                                            15.0, 60.0, '53A', 1.0),
-                                        customeContainer(
-                                            15.0, 60.0, '54A', 1.0),
-                                        sizedBox(70.0, 0.0),
-                                        customeContainer(
-                                            20.0, 60.0, '55A', 1.0),
-                                        sizedBox(10.0, 0.0),
-                                      ],
-                                    ),
-                                    sizedBox(0.0, 20.0),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        sizedBox(10.0, 0.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                customeContainer(
-                                                    50.0, 20.0, '57A', 1.0),
-                                                sizedBox(10.0, 0.0),
-                                                customeContainer(
-                                                    50.0, 20.0, '58A', 1.0),
-                                              ],
-                                            ),
-                                            sizedBox(10.0, 20.0),
-                                            customeContainer(
-                                                110.0, 20.0, '60A', 1.0),
-                                          ],
-                                        ),
-                                        sizedBox(20.0, 20.0),
-                                        customeContainer(
-                                            20.0, 60.0, '59A', 1.0),
-                                        sizedBox(40.0, 20.0),
-                                        customeContainer(
-                                            20.0, 60.0, '56A', 1.0),
-                                      ],
-                                    ),
-                                    sizedBox(10.0, 20.0),
-
-                                    customeContainer(110.0, 20.0, '61A', 1.0),
-
-                                    customeContainer(110.0, 20.0, '73A', 1.0),
-                                    sizedBox(10.0, 20.0),
-                                    Column(
-                                      children: [
-                                        sizedBox(160.0, 20.0),
-                                        customeContainer(
-                                            60.0, 20.0, '32A', 1.0),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        customeContainer(
-                                            20.0, 100.0, '74A', 1.0),
-                                        sizedBox(20.0, 20.0),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                sizedBox(20.0, 20.0),
-                                                customeContainer(
-                                                    60.0, 20.0, '63A', 1.0),
-                                                customeContainer(
-                                                    100.0, 20.0, '62A', 1.0),
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                sizedBox(20.0, 20.0),
-                                                customeContainer(
-                                                    90.0, 20.0, '64A', 1.0),
-                                                customeContainer(
-                                                    70.0, 20.0, '65A', 1.0),
-                                              ],
-                                            ),
-                                            sizedBox(10.0, 20.0),
-                                            Column(
-                                              children: [
-                                                sizedBox(20.0, 20.0),
-                                                customeContainer(
-                                                    70.0, 20.0, '67A', 1.0),
-                                                customeContainer(
-                                                    90.0, 20.0, '66A', 1.0),
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                sizedBox(20.0, 20.0),
-                                                customeContainer(
-                                                    60.0, 20.0, '', 1.0),
-                                                customeContainer(
-                                                    100.0, 20.0, '69A', 1.0),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    sizedBox(20.0, 50.0),
-                                    // columns in strating for row==============================
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        //========================================= 75 A to 85 a =======================================================
-
-                                        Row(
-                                          children: [
-                                            sizedBox(20.0, 30.0),
-                                            customeContainer(
-                                                20.0, 100.0, '75A', 1.0),
-                                            // sizedBox(20.0, 20.0),
-                                          ],
-                                        ),
-                                        //========================================= 75 A to 85 a =======================================================
-
-                                        sizedBox(20.0, 80.0),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            sizedBox(20.0, 20.0),
-                                            customeContainer(
-                                                60.0, 20.0, '78A', 1.0),
-                                            // ============ stairs area starting================================
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    customeContainer(
-                                                        50.0, 20.0, '79A', 1.0),
-                                                    sizedBox(20.0, 20.0),
-                                                    customeContainer(
-                                                        50.0, 20.0, '80A', 1.0),
-                                                    customeContainer(
-                                                        50.0, 20.0, '81A', 1.0),
-                                                    sizedBox(20.0, 20.0),
-                                                    customeContainer(
-                                                        50.0, 20.0, '82A', 1.0),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  height: 10,
-                                                  width: 120,
-                                                  color: Colors.blueGrey,
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        sizedBox(0.0, 20.0),
-
-                                        Row(
-                                          children: [
-                                            sizedBox(0.0, 80.0),
-                                            Container(
-                                              height: 20,
-                                              width: 80,
-                                              color: Colors.blueGrey,
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            sizedBox(0.0, 20.0),
-                                            customeContainer(
-                                                50.0, 20.0, '70A', 1.0),
-                                            customeContainer(
-                                                50.0, 20.0, '71A', 1.0),
-                                            sizedBox(0.0, 20.0),
-                                            customeContainer(
-                                                50.0, 20.0, '72A', 1.0),
-                                            Container(
-                                              height: 50,
-                                              width: 40,
-                                              color: Colors.blueGrey,
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            customeContainer(
-                                                50.0, 20.0, '28A', 1.0),
-                                            Container(
-                                              height: 50,
-                                              width: 120,
-                                              color: Colors.blueGrey,
-                                            ),
-                                            sizedBox(0.0, 2.0),
-                                            customeContainer(
-                                                50.0, 20.0, '85A', 1.0),
-                                          ],
-                                        ),
-                                        Row(children: [
-                                          customeContainer(
-                                              20.0, 50.0, '29A', 1.0),
-                                          sizedBox(0.0, 90.0),
-                                          customeContainer(
-                                              20.0, 50.0, '30A', 1.0),
-                                        ])
-                                      ],
-                                      // ============ stairs area starting================================
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        customeContainer(
-                                            20.0, 70.0, '84A', 1.0),
-                                        sizedBox(20.0, 2.0),
-                                        customeContainer(60.0, 30.0, '', 1.0),
-                                        sizedBox(20.0, 2.0),
-                                        customeContainer(50.0, 30.0, '', 1.0),
-                                        sizedBox(10.0, 2.0),
-                                        customeContainer(
-                                            50.0, 30.0, '31A', 1.0),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        sizedBox(120.0, 2.0),
-                                        customeContainer(
-                                            60.0, 25.0, '88A', 1.0),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        sizedBox(60.0, 2.0),
-                                        customeContainer(
-                                            60.0, 25.0, '89A', 1.0),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        customeContainer(
-                                            60.0, 25.0, '91A', 1.0),
-                                        customeContainer(
-                                            60.0, 25.0, '90A', 1.0),
-                                        sizedBox(90.0, 2.0),
-                                        customeContainer(
-                                            20.0, 60.0, '94A', 1.0),
-                                      ],
-                                    ),
-                                    sizedBox(0.0, 20.0),
-                                    Column(
-                                      children: [
-                                        sizedBox(5.0, 20.0),
-                                        customeContainer(
-                                            120.0, 30.0, 'table', 5.0),
-                                      ],
-                                    ),
-                                    sizedBox(0.0, 25.0),
-                                    Column(
-                                      children: [
-                                        customeContainer(
-                                            60.0, 25.0, '92A', 1.0),
-                                        customeContainer(
-                                            60.0, 25.0, '93A', 1.0),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                          ),
-                          // Container(
-                          //   height: 130,
-                          //   width: 90,
-                          //   color: const Color.fromARGB(255, 0, 0, 0),
-                          // ),
-                          sizedBox(0.0, 10.0),
-                        ],
-                      ),
-                      //======================================================================= Main Area =====================================================================
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          sizedBox(0.0, 10.0),
-                          // ==========================left side ============================
-                          Container(
-                            width: width / 2.6,
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+          child: Center(
+            child: InteractiveViewer(
+              // scaleEnabled: false,
+              // constrained: false,
+              // boundaryMargin: EdgeInsets.zero,
+              clipBehavior: Clip.hardEdge,
+              panEnabled: true, // Enable panning
+              // boundaryMargin: EdgeInsets.all(20), // Add padding outside
+              minScale: 0.01, // Minimum zoom-out scale
+              maxScale: 1.0, // Maximum zoom-in scale
+              transformationController: _zoom_controller, // Use the controller
+              onInteractionEnd: (details) {
+                // Check if zoom level is beyond the default (1.0)
+              },
+              child: Container(
+                // width: MediaQuery.of(context).size.width,
+                // height: MediaQuery.of(context).size.height,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            sizedBox(0.0, 10.0),
+                            Column(
                               children: [
-                                sizedBox(20.0, 10.0),
-
-                                customeContainer(
-                                    200.0, double.infinity, 'Staff Area', 0.0),
-                                sizedBox(10.0, 10.0),
-                                customeContainer(
-                                    20.0, double.infinity, '49A', 0.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(
-                                    35.0, double.infinity, 'Table', 0.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(
-                                    20.0, double.infinity, '48A', 0.0),
-                                sizedBox(10.0, 10.0),
                                 Container(
-                                  height: 250,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey)),
-                                ), //================= left bottom side area ==================================
-                                // sizedBox(10.0, 10.0),
-
-                                Container(
-                                  width: double.infinity,
-                                  child: Column(
+                                  // height: 130,
+                                  color: Colors.white,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      // sizedBox(0.0, 10.0),
+                                      Column(
                                         children: [
-                                          sizedBox(50.0, 10.0),
-                                          Column(
+                                          sizedBox(10.0, 0.0),
+                                          customeContainer(
+                                              20.0, 60.0, '50A', 1.0),
+                                          sizedBox(20.0, 0.0),
+                                          customeContainer(
+                                              15.0, 60.0, '51A', 1.0),
+                                          customeContainer(
+                                              15.0, 60.0, '52A', 1.0),
+                                          sizedBox(20.0, 0.0),
+                                          customeContainer(
+                                              15.0, 60.0, '53A', 1.0),
+                                          customeContainer(
+                                              15.0, 60.0, '54A', 1.0),
+                                          sizedBox(70.0, 0.0),
+                                          customeContainer(
+                                              20.0, 60.0, '55A', 1.0),
+                                          sizedBox(10.0, 0.0),
+                                        ],
+                                      ),
+                                      sizedBox(0.0, 20.0),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          sizedBox(10.0, 0.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              sizedBox(10.0, 10.0),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  customeContainer(
+                                                      50.0, 20.0, '57A', 1.0),
+                                                  sizedBox(10.0, 0.0),
+                                                  customeContainer(
+                                                      50.0, 20.0, '58A', 1.0),
+                                                ],
+                                              ),
+                                              sizedBox(10.0, 20.0),
                                               customeContainer(
-                                                  60.0, 20.0, '98A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  60.0, 20.0, '99B', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  60.0, 20.0, '99A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  60.0, 20.0, '44A', 1.0),
-                                              sizedBox(10.0, 10.0),
+                                                  110.0, 20.0, '60A', 1.0),
                                             ],
                                           ),
-                                          sizedBox(50.0, 30.0),
-                                          Column(
+                                          sizedBox(20.0, 20.0),
+                                          customeContainer(
+                                              20.0, 60.0, '59A', 1.0),
+                                          sizedBox(40.0, 20.0),
+                                          customeContainer(
+                                              20.0, 60.0, '56A', 1.0),
+                                        ],
+                                      ),
+                                      sizedBox(10.0, 20.0),
+
+                                      customeContainer(110.0, 20.0, '61A', 1.0),
+
+                                      customeContainer(110.0, 20.0, '73A', 1.0),
+                                      sizedBox(10.0, 20.0),
+                                      Column(
+                                        children: [
+                                          sizedBox(160.0, 20.0),
+                                          customeContainer(
+                                              60.0, 20.0, '32A', 1.0),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          customeContainer(
+                                              20.0, 100.0, '74A', 1.0),
+                                          sizedBox(20.0, 20.0),
+                                          Row(
                                             children: [
-                                              customeContainer(
-                                                  40.0, 20.0, '33A', 1.0),
-                                              sizedBox(40.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '35A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '39A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '40A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '41A', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              customeContainer(
-                                                  40.0, 20.0, '33B', 1.0),
-                                              sizedBox(40.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '35B', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '39B', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '40B', 1.0),
-                                              sizedBox(10.0, 10.0),
-                                              customeContainer(
-                                                  40.0, 20.0, '41B', 1.0),
-                                              sizedBox(10.0, 10.0),
+                                              Column(
+                                                children: [
+                                                  sizedBox(20.0, 20.0),
+                                                  customeContainer(
+                                                      60.0, 20.0, '63A', 1.0),
+                                                  customeContainer(
+                                                      100.0, 20.0, '62A', 1.0),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  sizedBox(20.0, 20.0),
+                                                  customeContainer(
+                                                      90.0, 20.0, '64A', 1.0),
+                                                  customeContainer(
+                                                      70.0, 20.0, '65A', 1.0),
+                                                ],
+                                              ),
+                                              sizedBox(10.0, 20.0),
+                                              Column(
+                                                children: [
+                                                  sizedBox(20.0, 20.0),
+                                                  customeContainer(
+                                                      70.0, 20.0, '67A', 1.0),
+                                                  customeContainer(
+                                                      90.0, 20.0, '66A', 1.0),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  sizedBox(20.0, 20.0),
+                                                  customeContainer(
+                                                      60.0, 20.0, '', 1.0),
+                                                  customeContainer(
+                                                      100.0, 20.0, '69A', 1.0),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ],
-                                      )
+                                      ),
+                                      sizedBox(20.0, 50.0),
+                                      // columns in strating for row==============================
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //========================================= 75 A to 85 a =======================================================
+
+                                          Row(
+                                            children: [
+                                              sizedBox(20.0, 30.0),
+                                              customeContainer(
+                                                  20.0, 100.0, '75A', 1.0),
+                                              // sizedBox(20.0, 20.0),
+                                            ],
+                                          ),
+                                          //========================================= 75 A to 85 a =======================================================
+
+                                          sizedBox(20.0, 80.0),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              sizedBox(20.0, 20.0),
+                                              customeContainer(
+                                                  60.0, 20.0, '78A', 1.0),
+                                              // ============ stairs area starting================================
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      customeContainer(50.0,
+                                                          20.0, '79A', 1.0),
+                                                      sizedBox(20.0, 20.0),
+                                                      customeContainer(50.0,
+                                                          20.0, '80A', 1.0),
+                                                      customeContainer(50.0,
+                                                          20.0, '81A', 1.0),
+                                                      sizedBox(20.0, 20.0),
+                                                      customeContainer(50.0,
+                                                          20.0, '82A', 1.0),
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    height: 10,
+                                                    width: 120,
+                                                    color: Colors.blueGrey,
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          sizedBox(0.0, 20.0),
+
+                                          Row(
+                                            children: [
+                                              sizedBox(0.0, 80.0),
+                                              Container(
+                                                height: 20,
+                                                width: 80,
+                                                color: Colors.blueGrey,
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              sizedBox(0.0, 20.0),
+                                              customeContainer(
+                                                  50.0, 20.0, '70A', 1.0),
+                                              customeContainer(
+                                                  50.0, 20.0, '71A', 1.0),
+                                              sizedBox(0.0, 20.0),
+                                              customeContainer(
+                                                  50.0, 20.0, '72A', 1.0),
+                                              Container(
+                                                height: 50,
+                                                width: 40,
+                                                color: Colors.blueGrey,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              customeContainer(
+                                                  50.0, 20.0, '28A', 1.0),
+                                              Container(
+                                                height: 50,
+                                                width: 120,
+                                                color: Colors.blueGrey,
+                                              ),
+                                              sizedBox(0.0, 2.0),
+                                              customeContainer(
+                                                  50.0, 20.0, '85A', 1.0),
+                                            ],
+                                          ),
+                                          Row(children: [
+                                            customeContainer(
+                                                20.0, 50.0, '29A', 1.0),
+                                            sizedBox(0.0, 90.0),
+                                            customeContainer(
+                                                20.0, 50.0, '30A', 1.0),
+                                          ])
+                                        ],
+                                        // ============ stairs area starting================================
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          customeContainer(
+                                              20.0, 70.0, '84A', 1.0),
+                                          sizedBox(20.0, 2.0),
+                                          customeContainer(60.0, 30.0, '', 1.0),
+                                          sizedBox(20.0, 2.0),
+                                          customeContainer(50.0, 30.0, '', 1.0),
+                                          sizedBox(10.0, 2.0),
+                                          customeContainer(
+                                              50.0, 30.0, '31A', 1.0),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          sizedBox(120.0, 2.0),
+                                          customeContainer(
+                                              60.0, 25.0, '88A', 1.0),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          sizedBox(60.0, 2.0),
+                                          customeContainer(
+                                              60.0, 25.0, '89A', 1.0),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          customeContainer(
+                                              60.0, 25.0, '91A', 1.0),
+                                          customeContainer(
+                                              60.0, 25.0, '90A', 1.0),
+                                          sizedBox(90.0, 2.0),
+                                          customeContainer(
+                                              20.0, 60.0, '94A', 1.0),
+                                        ],
+                                      ),
+                                      sizedBox(0.0, 20.0),
+                                      Column(
+                                        children: [
+                                          sizedBox(5.0, 20.0),
+                                          customeContainer(
+                                              120.0, 30.0, 'table', 5.0),
+                                        ],
+                                      ),
+                                      sizedBox(0.0, 25.0),
+                                      Column(
+                                        children: [
+                                          customeContainer(
+                                              60.0, 25.0, '92A', 1.0),
+                                          customeContainer(
+                                              60.0, 25.0, '93A', 1.0),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
+                              crossAxisAlignment: CrossAxisAlignment.start,
                             ),
-                          ),
-                          // ==========================left side ============================
-                          // lengthy rack area 1 left =========================================================
-                          sizedBox(0.0, 10.0),
-                          Container(
-                            // height: height / 0.88,
-                            width: width / 2.0,
-                            color: const Color.fromARGB(255, 255, 255, 255),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '13B', 3.0),
-                                customeContainer(20.0, width / 1.9, '13A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '12B', 3.0),
-                                customeContainer(20.0, width / 1.9, '12A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '11B', 3.0),
-                                customeContainer(20.0, width / 1.9, '11A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '10B', 3.0),
-                                customeContainer(20.0, width / 1.9, '10A', 3.0),
-                                sizedBox(100.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '9B', 3.0),
-                                customeContainer(20.0, width / 1.9, '9A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '8B', 3.0),
-                                customeContainer(20.0, width / 1.9, '8A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '7B', 3.0),
-                                customeContainer(20.0, width / 1.9, '7A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '6B', 3.0),
-                                customeContainer(20.0, width / 1.9, '6A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '5B', 3.0),
-                                customeContainer(20.0, width / 1.9, '5A', 3.0),
-                                sizedBox(50.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '4B', 3.0),
-                                customeContainer(20.0, width / 1.9, '4A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '3B', 3.0),
-                                customeContainer(20.0, width / 1.9, '3A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '2B', 3.0),
-                                customeContainer(20.0, width / 1.9, '2A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.9, '1B', 3.0),
-                                customeContainer(20.0, width / 1.9, '1A', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(
-                                    40.0, width / 1.9, 'table', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(
-                                    40.0, width / 1.9, 'table', 3.0),
-                                sizedBox(20.0, 10.0),
-                                Divider()
-                              ],
-                            ),
-                          ),
-                          // lengthy rack area 1 left =========================================================
+                            // Container(
+                            //   height: 130,
+                            //   width: 90,
+                            //   color: const Color.fromARGB(255, 0, 0, 0),
+                            // ),
+                            sizedBox(0.0, 10.0),
+                          ],
+                        ),
+                        //======================================================================= Main Area =====================================================================
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            sizedBox(0.0, 10.0),
+                            // ==========================left side ============================
+                            Container(
+                              width: width / 2.6,
+                              color: Colors.white,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  sizedBox(20.0, 10.0),
 
-                          sizedBox(0.0, 10.0),
-                          // ===================table =====================================
-                          Column(
-                            children: [
-                              sizedBox(20.0, 20.0),
-                              customeContainer(
-                                  height / 1.3, width / 15, 'Table', 2.0
-                                  // color: Colors.yellow,
-                                  ),
-                              sizedBox(45.0, 20.0),
-                              customeContainer(
-                                  height / 3.5, width / 15, 'Table', 2.0
-                                  // color: Colors.yellow,
-                                  ),
-                            ],
-                          ),
-                          sizedBox(0.0, 20.0),
-                          Container(
-                            margin: EdgeInsets.only(top: 20),
-                            height: height / 0.9,
-                            width: width / 9,
-                            color: const Color.fromARGB(255, 122, 122, 122),
-                            child: Center(
-                              child: RotatedBox(
-                                quarterTurns: 135,
-                                child: Text(
-                                  'Table',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                                  customeContainer(200.0, double.infinity,
+                                      'Staff Area', 0.0),
+                                  sizedBox(10.0, 10.0),
+                                  customeContainer(
+                                      20.0, double.infinity, '49A', 0.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      35.0, double.infinity, 'Table', 0.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, double.infinity, '48A', 0.0),
+                                  sizedBox(10.0, 10.0),
+                                  Container(
+                                    height: 250,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey)),
+                                  ), //================= left bottom side area ==================================
+                                  // sizedBox(10.0, 10.0),
+
+                                  Container(
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            sizedBox(50.0, 10.0),
+                                            Column(
+                                              children: [
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    60.0, 20.0, '98A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    60.0, 20.0, '99B', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    60.0, 20.0, '99A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    60.0, 20.0, '44A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                              ],
+                                            ),
+                                            sizedBox(50.0, 30.0),
+                                            Column(
+                                              children: [
+                                                customeContainer(
+                                                    40.0, 20.0, '33A', 1.0),
+                                                sizedBox(40.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '35A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '39A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '40A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '41A', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                customeContainer(
+                                                    40.0, 20.0, '33B', 1.0),
+                                                sizedBox(40.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '35B', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '39B', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '40B', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                                customeContainer(
+                                                    40.0, 20.0, '41B', 1.0),
+                                                sizedBox(10.0, 10.0),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          ),
-                          sizedBox(0.0, 110.0),
-                          Container(
-                            margin: EdgeInsets.only(top: 20),
-                            height: height / 0.9,
-                            width: width / 9,
-                            color: const Color.fromARGB(255, 122, 122, 122),
-                            child: Center(
-                              child: RotatedBox(
-                                quarterTurns: 135,
-                                child: Text(
-                                  'Table',
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                            // ==========================left side ============================
+                            // lengthy rack area 1 left =========================================================
+                            sizedBox(0.0, 10.0),
+                            Container(
+                              // height: height / 0.88,
+                              width: width / 2.0,
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '13B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '13A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '12B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '12A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '11B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '11A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '10B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '10A', 3.0),
+                                  sizedBox(100.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '9B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '9A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '8B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '8A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '7B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '7A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '6B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '6A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '5B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '5A', 3.0),
+                                  sizedBox(50.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '4B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '4A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '3B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '3A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '2B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '2A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '1B', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.9, '1A', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      40.0, width / 1.9, 'table', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      40.0, width / 1.9, 'table', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  Divider()
+                                ],
                               ),
                             ),
-                          ),
-                          sizedBox(0.0, 20.0),
-                          Column(
-                            children: [
-                              sizedBox(20.0, 20.0),
-                              customeContainer(
-                                  height / 1.3, width / 15, 'Table', 2.0
-                                  // color: Colors.yellow,
-                                  ),
-                              sizedBox(45.0, 20.0),
-                              customeContainer(
-                                  height / 3.5, width / 15, 'Table', 2.0
-                                  // color: Colors.yellow,
-                                  ),
-                            ],
-                          ),
-                          sizedBox(0.0, 10.0),
-                          Container(
-                            width: width / 1.7,
-                            // color: Colors.yellow,
-                            child: Column(
+                            // lengthy rack area 1 left =========================================================
+
+                            sizedBox(0.0, 10.0),
+                            // ===================table =====================================
+                            Column(
                               children: [
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '14A', 3.0),
-                                customeContainer(20.0, width / 1.7, '14B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '15A', 3.0),
-                                customeContainer(20.0, width / 1.7, '15B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '16A', 3.0),
-                                customeContainer(20.0, width / 1.7, '16B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '17A', 3.0),
-                                customeContainer(20.0, width / 1.7, '17B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '18A', 3.0),
-                                customeContainer(20.0, width / 1.7, '18B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '19A', 3.0),
-                                customeContainer(20.0, width / 1.7, '19B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '20A', 3.0),
-                                customeContainer(20.0, width / 1.7, '20B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '21A', 3.0),
-                                customeContainer(20.0, width / 1.7, '21B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '22A', 3.0),
-                                customeContainer(20.0, width / 1.7, '22B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '23A', 3.0),
-                                customeContainer(20.0, width / 1.7, '23B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '24A', 3.0),
-                                customeContainer(20.0, width / 1.7, '24B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '25A', 3.0),
-                                customeContainer(20.0, width / 1.7, '25B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '26A', 3.0),
-                                customeContainer(20.0, width / 1.7, '26B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '27A', 3.0),
-                                customeContainer(20.0, width / 1.7, '27B', 3.0),
-                                sizedBox(20.0, 10.0),
-                                customeContainer(20.0, width / 1.7, '28A', 3.0),
-                                customeContainer(20.0, width / 1.7, '28B', 3.0),
-                                sizedBox(20.0, 10.0),
+                                sizedBox(20.0, 20.0),
                                 customeContainer(
-                                    100.0, width / 1.7, 'Librarian', 3.0),
-                                sizedBox(20.0, 10.0),
-                                Divider()
+                                    height / 1.3, width / 15, 'Table', 2.0
+                                    // color: Colors.yellow,
+                                    ),
+                                sizedBox(45.0, 20.0),
+                                customeContainer(
+                                    height / 3.5, width / 15, 'Table', 2.0
+                                    // color: Colors.yellow,
+                                    ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            height: 100,
-                            width: width / 2.5,
-                            color: Colors.white,
-                          ),
-                          Container(
-                            height: 100,
-                            width: width / 1.5,
-                            color: const Color.fromARGB(255, 255, 239, 202),
-                            child: Center(
-                              child: Text('Lobby'),
+                            sizedBox(0.0, 20.0),
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              height: height / 0.9,
+                              width: width / 9,
+                              color: const Color.fromARGB(255, 122, 122, 122),
+                              child: Center(
+                                child: RotatedBox(
+                                  quarterTurns: 135,
+                                  child: Text(
+                                    'Table',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          Container(
-                            height: 100,
-                            width: width / 1.5,
-                            color: const Color.fromARGB(255, 162, 209, 255),
-                            child: Center(
-                              child: Text('Entrance'),
+                            sizedBox(0.0, 110.0),
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              height: height / 0.9,
+                              width: width / 9,
+                              color: const Color.fromARGB(255, 122, 122, 122),
+                              child: Center(
+                                child: RotatedBox(
+                                  quarterTurns: 135,
+                                  child: Text(
+                                    'Table',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          Container(
-                            height: 100,
-                            width: width / 1.5,
-                            color: const Color.fromARGB(255, 255, 239, 202),
-                            child: Center(
-                              child: Text('Checkout Area'),
+                            sizedBox(0.0, 20.0),
+                            Column(
+                              children: [
+                                sizedBox(20.0, 20.0),
+                                customeContainer(
+                                    height / 1.3, width / 15, 'Table', 2.0
+                                    // color: Colors.yellow,
+                                    ),
+                                sizedBox(45.0, 20.0),
+                                customeContainer(
+                                    height / 3.5, width / 15, 'Table', 2.0
+                                    // color: Colors.yellow,
+                                    ),
+                              ],
                             ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  CustomPaint(
-                      painter: NavigationPainter(
-                          progress: _progress.value,
-                          directions: widget.array,
-                          screenSize: MediaQuery.of(context).size,
-                          height: height,
-                          width: width),
-                      child: Container()),
-                  Padding(
-                      padding: EdgeInsets.only(top: 225),
-                      child: Container(
-                        height: 8,
-                        width: 170,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                      padding: EdgeInsets.only(top: 225, left: width / 1.6),
-                      child: Container(
-                        height: 8,
-                        width: 130,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                      padding: EdgeInsets.only(top: 230, left: width / 0.507),
-                      child: Container(
-                        height: 8,
-                        width: 170,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                      padding: EdgeInsets.only(
-                        top: 1150,
-                      ),
-                      child: Container(
-                        height: 8,
-                        width: 145,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                      padding: EdgeInsets.only(top: 845, left: width / 2.55),
-                      child: Container(
-                        height: 30,
-                        width: 8,
-                        color: Colors.black,
-                      )),
-                  Padding(
-                      padding: EdgeInsets.only(top: 925, left: width / 2.55),
-                      child: Container(
-                        height: height / 1.66,
-                        width: 8,
-                        color: Colors.black,
-                      ))
-                ],
+                            sizedBox(0.0, 10.0),
+                            Container(
+                              width: width / 1.7,
+                              // color: Colors.yellow,
+                              child: Column(
+                                children: [
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '14A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '14B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '15A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '15B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '16A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '16B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '17A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '17B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '18A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '18B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '19A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '19B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '20A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '20B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '21A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '21B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '22A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '22B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '23A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '23B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '24A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '24B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '25A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '25B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '26A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '26B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '27A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '27B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '28A', 3.0),
+                                  customeContainer(
+                                      20.0, width / 1.7, '28B', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  customeContainer(
+                                      100.0, width / 1.7, 'Librarian', 3.0),
+                                  sizedBox(20.0, 10.0),
+                                  Divider()
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              height: 100,
+                              width: width / 2.5,
+                              color: Colors.white,
+                            ),
+                            Container(
+                              height: 100,
+                              width: width / 1.5,
+                              color: const Color.fromARGB(255, 255, 239, 202),
+                              child: Center(
+                                child: Text('Lobby'),
+                              ),
+                            ),
+                            Container(
+                              height: 100,
+                              width: width / 1.5,
+                              color: const Color.fromARGB(255, 162, 209, 255),
+                              child: Center(
+                                child: Text('Entrance'),
+                              ),
+                            ),
+                            Container(
+                              height: 100,
+                              width: width / 1.5,
+                              color: const Color.fromARGB(255, 255, 239, 202),
+                              child: Center(
+                                child: Text('Checkout Area'),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    CustomPaint(
+                        painter: NavigationPainter(
+                            progress: _progress.value,
+                            directions: widget.array,
+                            screenSize: MediaQuery.of(context).size,
+                            height: height,
+                            width: width),
+                        child: Container()),
+                    Padding(
+                        padding: EdgeInsets.only(top: 225),
+                        child: Container(
+                          height: 8,
+                          width: 170,
+                          color: Colors.black,
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(top: 225, left: width / 1.6),
+                        child: Container(
+                          height: 8,
+                          width: 130,
+                          color: Colors.black,
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(top: 230, left: width / 0.507),
+                        child: Container(
+                          height: 8,
+                          width: 170,
+                          color: Colors.black,
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(
+                          top: 1150,
+                        ),
+                        child: Container(
+                          height: 8,
+                          width: 145,
+                          color: Colors.black,
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(top: 845, left: width / 2.55),
+                        child: Container(
+                          height: 30,
+                          width: 8,
+                          color: Colors.black,
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(top: 925, left: width / 2.55),
+                        child: Container(
+                          height: height / 1.66,
+                          width: 8,
+                          color: Colors.black,
+                        ))
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void dispose1() {
+    _zoom_controller.dispose();
+    super.dispose();
   }
 }
 
