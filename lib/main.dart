@@ -56,13 +56,15 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   late Matrix4 _initialZoom;
   final ScrollController _scrollController = ScrollController();
   bool isZoomedIn = false;
-
+  double minScale = 0.41; // Set your initial scale as min scale
   late Rect boundaryRect;
   // Define directions as a list of maps with sizes
 
   @override
   void initState() {
     super.initState();
+    _zoom_controller =
+        TransformationController(Matrix4.identity()..scale(minScale));
 
     // Set initial zoom to a smaller scale
     _initialZoom = Matrix4.identity()..scale(0.41); // Adjust scale as needed
@@ -88,8 +90,19 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
     super.dispose();
   }
 
+  void _resetZoom() {
+    _zoom_controller = TransformationController(_initialZoom);
+  }
+
+  void _resetscroll() {
+    _zoom_controller =
+        TransformationController(Matrix4.identity()..translate(0.0, 0.0));
+  }
+
   void togglebool() {
-    isZoomedIn = false;
+    setState(() {
+      isZoomedIn = false;
+    });
   }
 
   @override
@@ -147,19 +160,37 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
               clipBehavior: Clip.hardEdge,
               panEnabled: true, // Enable panning
               // boundaryMargin: EdgeInsets.all(20), // Add padding outside
-              minScale: 0.01, // Minimum zoom-out scale
+              minScale: minScale, // Minimum zoom-out scale
               maxScale: 1.0, // Maximum zoom-in scale
               transformationController: _zoom_controller, // Use the controller
               onInteractionEnd: (details) {
                 double currentScale =
                     _zoom_controller.value.getMaxScaleOnAxis();
                 print(currentScale);
-                if (currentScale == 1.0) {
+                if (currentScale == minScale) {}
+                if (currentScale > minScale) {
                   setState(() {
                     // Change the boolean when the scale goes beyond the default value
                     isZoomedIn = true;
                   });
                 }
+              },
+              onInteractionUpdate: (details) {
+                double _previousScale = 1.0;
+                double currentScale = details.scale;
+
+                if (currentScale > _previousScale) {
+                  _centerViewOnZoom();
+                  print("Zooming In");
+                } else if (currentScale < _previousScale) {
+                  _resetscroll();
+                  togglebool();
+
+                  _resetZoom();
+                  print("Zooming Out");
+                }
+
+                _previousScale = currentScale;
               },
               child: Container(
                 // width: MediaQuery.of(context).size.width,
@@ -175,6 +206,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                           children: [
                             sizedBox(0.0, 10.0),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   // height: 130,
@@ -476,7 +508,6 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                                   ),
                                 ),
                               ],
-                              crossAxisAlignment: CrossAxisAlignment.start,
                             ),
                             // Container(
                             //   height: 130,
@@ -674,7 +705,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                                   customeContainer(
                                       40.0, width / 1.9, 'table', 3.0),
                                   sizedBox(20.0, 10.0),
-                                  Divider()
+                                  const Divider()
                                 ],
                               ),
                             ),
@@ -698,11 +729,11 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                             ),
                             sizedBox(0.0, 20.0),
                             Container(
-                              margin: EdgeInsets.only(top: 20),
+                              margin: const EdgeInsets.only(top: 20),
                               height: height / 0.9,
                               width: width / 9,
                               color: const Color.fromARGB(255, 122, 122, 122),
-                              child: Center(
+                              child: const Center(
                                 child: RotatedBox(
                                   quarterTurns: 135,
                                   child: Text(
@@ -714,11 +745,11 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                             ),
                             sizedBox(0.0, 110.0),
                             Container(
-                              margin: EdgeInsets.only(top: 20),
+                              margin: const EdgeInsets.only(top: 20),
                               height: height / 0.9,
                               width: width / 9,
                               color: const Color.fromARGB(255, 122, 122, 122),
-                              child: Center(
+                              child: const Center(
                                 child: RotatedBox(
                                   quarterTurns: 135,
                                   child: Text(
@@ -828,7 +859,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                                   customeContainer(
                                       100.0, width / 1.7, 'Librarian', 3.0),
                                   sizedBox(20.0, 10.0),
-                                  Divider()
+                                  const Divider()
                                 ],
                               ),
                             ),
@@ -861,7 +892,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                               height: 100,
                               width: width / 1.5,
                               color: const Color.fromARGB(255, 255, 239, 202),
-                              child: Center(
+                              child: const Center(
                                 child: Text('Checkout Area'),
                               ),
                             ),
@@ -878,7 +909,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                             width: width),
                         child: Container()),
                     Padding(
-                        padding: EdgeInsets.only(top: 225),
+                        padding: const EdgeInsets.only(top: 225),
                         child: Container(
                           height: 8,
                           width: 170,
@@ -934,6 +965,22 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   void dispose1() {
     _zoom_controller.dispose();
     super.dispose();
+  }
+
+  void _centerViewOnZoom() {
+    // Get the size of the container
+    double width = 2000;
+    double height = 1000;
+
+    // Calculate the center point
+    double centerX = width / 2;
+    double centerY = height / 2;
+
+    // Update the transformation controller to center the view
+    _zoom_controller.value = Matrix4.identity()
+      ..translate(-centerX / _zoom_controller.value.getMaxScaleOnAxis(),
+          -centerY / _zoom_controller.value.getMaxScaleOnAxis())
+      ..scale(_zoom_controller.value.getMaxScaleOnAxis());
   }
 }
 
