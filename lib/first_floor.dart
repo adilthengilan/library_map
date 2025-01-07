@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:library_1/main.dart';
+import 'package:library_1/ground_floor.dart';
 
 class FirstFloor extends StatefulWidget {
   final String bookId;
@@ -17,10 +17,8 @@ class _FirstFloorState extends State<FirstFloor>
   late AnimationController _controller;
   late Animation<double> _progress;
   final TransformationController _zoom_controller = TransformationController();
-  late final Matrix4 _initialZoom;
   TransformationController _transformationController =
       TransformationController();
-  double _scale = 1.0;
   double _minScale = 0.5; // Minimum zoom-out scale
   double _maxScale = 2.0; // Maximum zoom-in scale
   // Define directions as a list of maps with sizes

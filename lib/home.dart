@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:library_1/first_floor.dart';
-import 'package:library_1/main.dart';
+import 'package:library_1/ground_floor.dart';
 import 'package:library_1/map.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _HomeScreenState extends State<HomeScreen> {
   final controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _MyWidgetState extends State<MyWidget> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NavigationLineScreen(
+                              builder: (context) => GroundFloor_Screen(
                                 bookId: '',
                                 rackId: controller.text,
                                 array: _directions,
