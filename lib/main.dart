@@ -95,8 +95,8 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
   }
 
   void _resetscroll() {
-    _zoom_controller =
-        TransformationController(Matrix4.identity()..translate(0.0, 0.0));
+    _scrollController.animateTo(0.0,
+        duration: Duration(milliseconds: 100), curve: Curves.easeInOut);
   }
 
   void togglebool() {
@@ -143,6 +143,7 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         physics: isZoomedIn
             ? AlwaysScrollableScrollPhysics()
             : NeverScrollableScrollPhysics(),
@@ -180,7 +181,6 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                 double currentScale = details.scale;
 
                 if (currentScale > _previousScale) {
-                  _centerViewOnZoom();
                   print("Zooming In");
                 } else if (currentScale < _previousScale) {
                   _resetscroll();
@@ -193,8 +193,6 @@ class _NavigationLineScreenState extends State<NavigationLineScreen>
                 _previousScale = currentScale;
               },
               child: Container(
-                // width: MediaQuery.of(context).size.width,
-                // height: MediaQuery.of(context).size.height,
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.black)),
                 child: Stack(

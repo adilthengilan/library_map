@@ -28,9 +28,7 @@ class _FirstFloorState extends State<FirstFloor>
   @override
   void initState() {
     super.initState();
-    // Set initial zoom to a smaller scale
-    // _initialZoom = Matrix4.identity()..scale(0.5); // Adjust scale as needed
-    // _zoom_controller.value = _initialZoom; // Apply initial zoom
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -54,6 +52,8 @@ class _FirstFloorState extends State<FirstFloor>
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    //==============================Demo testing navigation line=========================================================
+
     // final List<Map<String, dynamic>> _directions = [
     //   {"direction": "straight", "length": 360.0},
     //   {"direction": "left", "length": 220.0},
